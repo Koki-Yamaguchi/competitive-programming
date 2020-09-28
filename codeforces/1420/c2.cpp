@@ -2,7 +2,7 @@
 #define rep(i, n) for (int i = 0; (i) < (int) (n); (i) ++)
 using namespace std;
 
-long long calc(vector<int> &a) {
+long long calc(const vector<int> &a) {
         int n = a.size();
         long long res = 0;
         for (int i = 1; i < n - 1; i ++) {
@@ -16,7 +16,7 @@ long long calc(vector<int> &a) {
         return res;
 }
 
-long long f3(vector<int> &a, int m, int idx) {
+long long f3(const vector<int> &a, int m, int idx) {
         int sz = a.size();
         int ll = idx >= 2 ? a[idx - 2] : 0;
         int  l = a[idx - 1];
@@ -26,7 +26,7 @@ long long f3(vector<int> &a, int m, int idx) {
         return calc(v);
 }
 
-long long f2(vector<int> &a, int l, int r, int idx) {
+long long f2(const vector<int> &a, int l, int r, int idx) {
         int sz = a.size();
         int lll = idx >= 3 ? a[idx - 3] : 0;
         int ll  = a[idx - 2];
@@ -37,7 +37,7 @@ long long f2(vector<int> &a, int l, int r, int idx) {
         return calc(v);
 }
 
-int f1(vector<int> &a, int l, int r, int lidx) {
+long long f1(const vector<int> &a, int l, int r, int lidx) {
         int ridx = lidx + 1;
         int sz = a.size();
         int lll = lidx >= 2 ? a[lidx - 2] : 0;
@@ -77,7 +77,7 @@ void solve() {
                         ans -= f1(a, a[s], a[t], s);
                         ans += f1(a, a[t], a[s], s);
                 } else {
-                        assert(false);
+                        // nothing
                 }
                 cout << ans << '\n';
                 swap(a[s], a[t]);
