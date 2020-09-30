@@ -9,34 +9,41 @@ void solve() {
         cin >> s >> t;
         char a = t[0];
         char b = t[1];
-        vector<vector<int>> cur(201, vector<int> (201));
+        const int mmm = 5;
+        vector<vector<int>> cur(mmm, vector<int> (mmm));
         vector<int> cnt(n);
         cnt[0] = (s[0] == a);
         rep(i, n) if (i) {
                 cnt[i] = cnt[i - 1] + (s[i] == a);
         }
         rep(i, n) {
-                vector<vector<int>> nxt(201, vector<int> (201));
-                rep(ai, 201) {
-                        rep(bi, 201) {
-                                if (s[i] == b) {
+                cerr << "i = " << i << endl;
+                vector<vector<int>> nxt(mmm, vector<int> (mmm));
+                rep(ai, mmm) {
+                        rep(bi, mmm) {
+                                if (s[i] == b && (ai + bi) <= i + 1) {
                                         nxt[ai][bi] = max(nxt[ai][bi], cur[ai][bi] + (i ? cnt[i - 1] : 0) + ai);
-                                } else {
+                                } else if (ai + bi <= i + 1) {
                                         nxt[ai][bi] = max(nxt[ai][bi], cur[ai][bi]);
                                 }
-                                if (s[i] != a && (ai + 1 + bi) <= k && ai + 1 < 201) {
+                                if (s[i] != a && ai + 1 < mmm && (ai + 1 + bi) <= i + 1) {
                                         nxt[ai + 1][bi] = max(nxt[ai + 1][bi], cur[ai][bi]);
                                 }
-                                if (s[i] != b && (ai + bi + 1) <= k && bi + 1 < 201) {
+                                if (s[i] != b && bi + 1 < mmm && (ai + bi + 1) <= i + 1) {
                                         nxt[ai][bi + 1] = max(nxt[ai][bi + 1], cur[ai][bi] + (i ? cnt[i - 1] : 0) + ai);
                                 }
+                        }
+                }
+                rep(ai, mmm) {
+                        rep(bi, mmm) {
+                                printf("nxt[%d][%d] = %d\n", ai, bi, nxt[ai][bi]);
                         }
                 }
                 swap(cur, nxt);
         }
         int ans = 0;
-        rep(i, 201) {
-                rep(j, 201) {
+        rep(i, mmm) {
+                rep(j, mmm) {
                         if (i + j <= k) {
                                 ans = max(ans, cur[i][j]);
                         }
