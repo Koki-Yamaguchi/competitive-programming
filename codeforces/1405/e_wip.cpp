@@ -48,6 +48,7 @@ void solve() {
                         d[i] = i - a[i];
                 }
         }
+        cerr << "d" << endl;
         rep(i, n) cerr << d[i] << " "; cerr << endl;
         vector<int> to(n, -1), prev(n, -1);
         rep(i, n) {
@@ -60,38 +61,37 @@ void solve() {
                 }
                 prev[d[i]] = i;
         }
-        set<int> app;
+        int delc = 0;
         int ans = 0;
         vector<int> res(n);
         UnionFind uf(n);
         vector<int> acc(n);
         acc[0] = (d[0] == 0 ? uf.get(0) : 0);
-        vector<pair<pair<int, int>, int>> v(q);
+        vector<pair<int, pair<int, int>>> v(q);
         rep(i, q) {
                 v[i].first = i;
                 cin >> v[i].second.first >> v[i].second.second;
                 v[i].second.second = n - v[i].second.second;
         }
+        rep(i, q) cerr << v[i].second.first << " " << v[i].second.second << endl;
         sort(v.begin(), v.end(), [&](auto l, auto r) {
                 return l.second.second < r.second.second;
         });
         int cur = 0;
-        rep(i, n) {
+        rep(i, q) {
+                cerr << endl;
+                cerr << "i = " << i << endl;
                 int idx = v[i].first;
                 int l = v[i].second.first;
                 int r = v[i].second.second;
+                cerr << "l, r = " << l << " " << r << endl;
 
-                while (cur <= l) {
-                        if (d[cur] == 0) {
-                                app.insert(d[cur]);
+                while (cur < r) {
+                        cerr << "cur = " << cur << endl;
+                        if (d[cur] != -1 && d[cur] <= delc) {
+                                delc ++;
                                 ans ++;
-                        } else {
-                                if (app.count(d[cur] - 1)) {
-                                        app.insert(d[cur]);
-                                        ans ++;
-                                }
                         }
-
                         if (to[cur] != -1) {
                                 uf.unite(cur, to[cur]);
                         }
@@ -102,9 +102,13 @@ void solve() {
 
                         cur ++;
                 }
+                cerr << "ans = " << ans << endl;
+                cerr << "minus = " << (l ? acc[l - 1] : 0) << endl;
 
-                int aaa = ans - (x ? acc[x - 1] : 0);
-                res[idx] = ;
+                res[idx] = ans - (l ? acc[l - 1] : 0);
+        }
+        rep(i, q) {
+                cout << res[i] << '\n';
         }
 }
 

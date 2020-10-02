@@ -60,10 +60,7 @@ void solve() {
                 g[u].push_back(v);
                 g[v].push_back(u);
         }
-        if (2 * da + 1 > db) {
-                cout << "Alice" << '\n';
-                return;
-        }
+
         int len = -1;
         function<void (int, int, int)> dfs = [&](int u, int prev, int dep) {
                 if (u == b) {
@@ -79,12 +76,19 @@ void solve() {
                 cout << "Alice" << '\n';
                 return;
         }
+
         auto p = DiameterPath(g);
-        if (p.size() - 1 >= db) {
-                cout << "Bob" << '\n';
-        } else {
+        if (2 * da >= p.size() - 1) {
                 cout << "Alice" << '\n';
+                return;
         }
+
+        if (2 * da >= db) {
+                cout << "Alice" << '\n';
+                return;
+        }
+
+        cout << "Bob" << '\n';
 }
 
 int main() {
