@@ -13,15 +13,23 @@ ostream& operator << (ostream& os, vector<T>& vec) {
 	return os;
 }
 
-template< typename T >
-size_t longest_increasing_subsequence(const vector< T > &a) {
-  vector< T > lis;
-  for(auto &p : a) {
-    auto it = upper_bound(begin(lis), end(lis), p);
-    if(end(lis) == it) lis.emplace_back(p);
-    else *it = p;
-  }
-  return lis.size();
+template<typename T>
+int longest_increasing_subsequence(const vector<T> &v, bool strict) {
+        vector<T> lis;
+        for (const T &e : v) {
+                int idx;
+                if (strict) {
+                        idx = lower_bound(lis.begin(), lis.end(), e) - lis.begin();
+                } else {
+                        idx = upper_bound(lis.begin(), lis.end(), e) - lis.begin();
+                }
+                if (idx == lis.size()) {
+                        lis.emplace_back(e);
+                } else {
+                        lis[idx] = e;
+                }
+        }
+        return (int) lis.size();
 }
 
 void solve() {
@@ -73,7 +81,7 @@ void solve() {
                                         good.push_back(it);
                                 }
                         }
-                        int lis = longest_increasing_subsequence(good);
+                        int lis = longest_increasing_subsequence(good, false);
                         assert(i - li - 1 >= lis);
                         ans += (i - li - 1) - lis;
                         li = i;
