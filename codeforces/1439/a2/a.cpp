@@ -37,6 +37,21 @@ void solve() {
                 vector<int> r = {y0 + 1, x0 + 1, y1 + 1, x1 + 1, y2 + 1, x2 + 1};
                 ans.push_back(r);
         };
+        auto exc2 = [&](int topy, int leftx, int no_use_y, int no_use_x) {
+                vector<int> r;
+                for (int i = topy; i < topy + 2; i ++) {
+                        for (int j = leftx; j < leftx + 2; j ++) {
+                                if (i != no_use_y || j != no_use_x) {
+                                        r.push_back(i + 1);
+                                        r.push_back(j + 1);
+                                }
+                        }
+                }
+                s[r[0] - 1][r[1] - 1] ^= 1;
+                s[r[2] - 1][r[3] - 1] ^= 1;
+                s[r[4] - 1][r[5] - 1] ^= 1;
+                ans.push_back(r);
+        };
         if ((h & 1) && (w & 1)) {
                 if (s[h - 1][w - 1] == 1) {
                         exc(h - 1, w - 1, h - 2, w - 1, h - 1, w - 2);
@@ -110,51 +125,27 @@ void solve() {
                                 if (c == 0) {
                                         break;
                                 } else if (c == 1 || c == 3) {
-                                        vector<int> p;
-                                        int iii = -1, jjj = -1;
-                                        for (int ii = i; ii < i + 2; ii ++) {
-                                                for (int jj = j; jj < j + 2; jj ++) {
-                                                        if (s[ii][jj] == 0) {
-                                                                iii = ii;
-                                                                jjj = jj;
-                                                                goto end;
+                                        [&]() {
+                                                for (int ii = i; ii < i + 2; ii ++) {
+                                                        for (int jj = j; jj < j + 2; jj ++) {
+                                                                if (s[ii][jj] == 0) {
+                                                                        exc2(i, j, ii, jj);
+                                                                        return;
+                                                                }
                                                         }
                                                 }
-                                        }
-                                        end:;
-                                        for (int ii = i; ii < i + 2; ii ++) {
-                                                for (int jj = j; jj < j + 2; jj ++) {
-                                                        if (ii != iii || jj != jjj) {
-                                                                p.push_back(ii);
-                                                                p.push_back(jj);
-                                                        }
-                                                }
-                                        }
-                                        assert(p.size() == 6);
-                                        exc(p[0], p[1], p[2], p[3], p[4], p[5]);
+                                        }();
                                 } else if (c == 2 || c == 4) {
-                                        vector<int> p;
-                                        int iii = -1, jjj = -1;
-                                        for (int ii = i; ii < i + 2; ii ++) {
-                                                for (int jj = j; jj < j + 2; jj ++) {
-                                                        if (s[ii][jj] == 1) {
-                                                                iii = ii;
-                                                                jjj = jj;
-                                                                goto end2;
+                                        [&]() {
+                                                for (int ii = i; ii < i + 2; ii ++) {
+                                                        for (int jj = j; jj < j + 2; jj ++) {
+                                                                if (s[ii][jj] == 1) {
+                                                                        exc2(i, j, ii, jj);
+                                                                        return;
+                                                                }
                                                         }
                                                 }
-                                        }
-                                        end2:;
-                                        for (int ii = i; ii < i + 2; ii ++) {
-                                                for (int jj = j; jj < j + 2; jj ++) {
-                                                        if (ii != iii || jj != jjj) {
-                                                                p.push_back(ii);
-                                                                p.push_back(jj);
-                                                        }
-                                                }
-                                        }
-                                        assert(p.size() == 6);
-                                        exc(p[0], p[1], p[2], p[3], p[4], p[5]);
+                                        }();
                                 }
                         }
                 }
