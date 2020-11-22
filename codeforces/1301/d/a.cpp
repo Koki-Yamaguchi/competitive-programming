@@ -26,22 +26,6 @@ void solve() {
                 return;
         }
         cout << "YES\n";
-        if (w == 1) {
-                cout << k << '\n';
-                rep(i, h - 1) {
-                        if (k) {
-                                k --;
-                                cout << "1 D\n";
-                        }
-                }
-                rep(i, h - 1) {
-                        if (k) {
-                                k --;
-                                cout << "1 U\n";
-                        }
-                }
-                return;
-        }
         vector<pair<int, string>> res, ans;
         res.emplace_back(w - 1, "R");
         res.emplace_back(w - 1, "L");
@@ -54,30 +38,27 @@ void solve() {
                 }
         }
         res.emplace_back(h - 1, "U");
-
         rep(i, res.size()) {
+                if (k == 0) {
+                        break;
+                }
                 int f = res[i].first;
+                if (f == 0) continue;
                 int len = res[i].second.size();
                 string str = res[i].second;
                 if (f * len <= k) {
                         ans.push_back(res[i]);
                         k -= f * len;
-                        if (k == 0) break;
                 } else {
-                        int c = 0;
-                        while (k >= len) {
-                                c ++;
-                                k -= len;
-                        }
-                        if (c >= 1) {
+                        int c = k / len;
+                        int r = k % len;
+                        if (c) {
                                 ans.emplace_back(c, str);
                         }
-                        assert(k <= len);
-                        if (k == 0) {
-                                break;
+                        if (r) {
+                                ans.emplace_back(1, str.substr(0, r));
                         }
-                        ans.emplace_back(1, str.substr(0, k));
-                        break;
+                        k = 0;
                 }
         }
         assert(ans.size() <= 3000);

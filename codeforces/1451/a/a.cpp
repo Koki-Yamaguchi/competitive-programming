@@ -19,18 +19,23 @@ ostream& operator << (ostream& os, const vector<T>& vec) {
 }
 
 void solve() {
-        int n, m;
-        cin >> n >> m;
-        int val = n - m;
-        int cnt = m + 1;
-        int sm = val / cnt;
-        int lg = sm + 1;
-        int lgc = val % cnt;
-        int smc = cnt - lgc;
-        ll ans = (ll) n * (n + 1) / 2;
-        ans -= (ll) smc * sm * (sm + 1) / 2;
-        ans -= (ll) lgc * lg * (lg + 1) / 2;
-        cout << ans << '\n';
+        int n;
+        cin >> n;
+        if (n == 1) {
+                cout << 0 << '\n';
+                return;
+        } else if (n == 2) {
+                cout << 1 << '\n';
+                return;
+        } else if (n == 3) {
+                cout << 2 << '\n';
+                return;
+        }
+        if (n % 2 == 0) {
+                cout << 2 << '\n';
+        } else {
+                cout << 3 << '\n';
+        }
 }
 
 int main() {
