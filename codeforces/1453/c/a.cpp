@@ -18,10 +18,15 @@ ostream& operator << (ostream& os, const vector<T>& vec) {
 	return os;
 }
 
+#ifdef LOCAL
+const int c = 20;
+#else
+const int c = 2005;
+#endif
+
 int slv(int n, const vector<pair<int, int>> &ps) {
         int ma = -1;
         int mi = 1e9;
-        int c = 2005;
         vector<vector<int>> p(c);
         rep(i, ps.size()) {
                 ma = max(ma, ps[i].first);
