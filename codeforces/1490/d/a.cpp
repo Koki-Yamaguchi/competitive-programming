@@ -2,7 +2,13 @@
 using namespace std;
 #define rep(i, n) for (int i = 0; (i) < (int) (n); (i) ++)
 #define all(a) (a).begin(), (a).end()
+#define rall(a) (a).rbegin(), (a).rend()
+#define dump(x) cerr << #x << " = " << x << '\n';
 using ll = long long;
+template<typename T, typename U> ostream& operator << (ostream& os, const pair<T, U>& p) { os << p.first << " " << p.second; return os; }
+template<typename T> ostream& operator << (ostream& os, const vector<T>& vec) { for (int i = 0; i < vec.size(); i ++) { os << vec[i] << (i + 1 == vec.size() ? "" : " "); } return os; }
+template<typename T> bool chmin(T &a, const T& b) { if (a > b) { a = b; return true; } return false; }
+template<typename T> bool chmax(T &a, const T& b) { if (a < b) { a = b; return true; } return false; }
 
 template<typename F, typename T>
 struct segment_tree {
@@ -34,48 +40,35 @@ struct segment_tree {
 };
 
 void solve() {
-        int r, n;
-        cin >> r >> n;
-        vector<int> t, x, y;
-        t.push_back(0);
-        x.push_back(0);
-        y.push_back(0);
+        auto f = [](pair<int, int> a, pair<int, int> b) { return max(a, b); };
+        using seg_t = segment_tree<decltype(f), pair<int, int>>;
+        int n;
+        cin >> n;
+        vector<int> a(n);
         rep(i, n) {
-                int tt, xx, yy;
-                cin >> tt >> xx >> yy;
-                xx --, yy --;
-                t.push_back(tt);
-                x.push_back(xx);
-                y.push_back(yy);
+                cin >> a[i];
         }
-        vector<ll> dp(n + 1, -1e16);
-        auto f = [](long long a, long long b) { return max(a, b); };
-        using seg_t = segment_tree<decltype(f), long long>;
-        seg_t segtree(n + 1, f, (ll) -1e16);
-        dp[0] = 0;
-        segtree.update(0, 0);
+        seg_t segtree(n, f, {0, -1});
         rep(i, n) {
-                int border = max(0, i - 1006);
-                for (int j = i; j >= border; j --) {
-                        int dd = abs(x[j] - x[i + 1]) + abs(y[j] - y[i + 1]);
-                        int dt = abs(t[j] - t[i + 1]);
-                        if (dd <= dt) {
-                                dp[i + 1] = max(dp[i + 1], dp[j] + 1);
-                        }
-                }
-                if (border > 0) {
-                        dp[i + 1] = max(dp[i + 1], segtree.query(0, border) + 1);
-                }
-                segtree.update(i + 1, dp[i + 1]);
+                segtree.update(i, {a[i], i});
         }
-        cout << *max_element(all(dp)) << '\n';
+        vector<int> ans(n);
+        auto calc = [&](auto self, int l, int r, int d) -> void {
+                if (l >= r) return;
+                auto [_, idx] = segtree.query(l, r);
+                ans[idx] = d;
+                self(self, l, idx, d + 1);
+                self(self, idx + 1, r, d + 1);
+        };
+        calc(calc, 0, n, 0);
+        cout << ans << '\n';
 }
 
 int main() {
         cin.tie(nullptr);
         ios::sync_with_stdio(false);
-        // int t; cin >> t;
-        int t = 1;
+        int t; cin >> t;
+        // int t = 1;
         while (t --) {
                 solve();
         }
