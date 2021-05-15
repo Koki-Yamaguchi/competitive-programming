@@ -7,23 +7,33 @@ using namespace std;
 using ll = long long;
 template<typename T, typename U> ostream& operator << (ostream& os, const pair<T, U>& p) { os << p.first << " " << p.second; return os; }
 template<typename T> ostream& operator << (ostream& os, const vector<T>& vec) { for (int i = 0; i < vec.size(); i ++) { os << vec[i] << (i + 1 == vec.size() ? "" : " "); } return os; }
-template<typename T> ostream& operator << (ostream& os, const set<T> &p) { os << "{"; for (auto it = p.begin(); it != p.end(); it ++) { if (it != p.begin()) { os << ", "; } os << *it; } os << "}"; return os; }
-template<typename T, typename U> ostream& operator << (ostream& os, const map<T, U> &p) { for (auto it = p.begin(); it != p.end(); it ++) { if (it != p.begin()) { os << ", "; } os << "{" << (*it).first << ": " << (*it).second << "}"; } return os; }
 template<typename T> bool chmin(T &a, const T& b) { if (a > b) { a = b; return true; } return false; }
 template<typename T> bool chmax(T &a, const T& b) { if (a < b) { a = b; return true; } return false; }
 
 void solve() {
-        int n;
-        cin >> n;
-        map<int, int> cnt;
-        vector<int> a(n);
-        rep(i, n) {
-                cin >> a[i];
-                cnt[a[i]] ++;
+        int n, k;
+        cin >> n >> k;
+        string s;
+        cin >> s;
+        vector<int> nxt(n, -1);
+        for (int i = n - 1; i >= 0; i --) {
+                if (s[i] == '*') {
+                        nxt[i] = i;
+                } else if (i != n - 1) {
+                        nxt[i] = nxt[i + 1];
+                }
         }
+        int c = 1e9;
         int ans = 0;
-        for (auto it : cnt) {
-                ans = max(ans, it.second);
+        rep(i, n) {
+                c ++;
+                if (s[i] == '*') {
+                        int d = i + k - c;
+                        if (i == n - 1 || nxt[i + 1] == -1 || nxt[i + 1] > d) {
+                                ans ++;
+                                c = 0;
+                        }
+                }
         }
         cout << ans << '\n';
 }
@@ -38,4 +48,3 @@ int main() {
         }
         return 0;
 }
-

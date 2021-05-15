@@ -7,35 +7,36 @@ using namespace std;
 using ll = long long;
 template<typename T, typename U> ostream& operator << (ostream& os, const pair<T, U>& p) { os << p.first << " " << p.second; return os; }
 template<typename T> ostream& operator << (ostream& os, const vector<T>& vec) { for (int i = 0; i < vec.size(); i ++) { os << vec[i] << (i + 1 == vec.size() ? "" : " "); } return os; }
-template<typename T> ostream& operator << (ostream& os, const set<T> &p) { os << "{"; for (auto it = p.begin(); it != p.end(); it ++) { if (it != p.begin()) { os << ", "; } os << *it; } os << "}"; return os; }
-template<typename T, typename U> ostream& operator << (ostream& os, const map<T, U> &p) { for (auto it = p.begin(); it != p.end(); it ++) { if (it != p.begin()) { os << ", "; } os << "{" << (*it).first << ": " << (*it).second << "}"; } return os; }
 template<typename T> bool chmin(T &a, const T& b) { if (a > b) { a = b; return true; } return false; }
 template<typename T> bool chmax(T &a, const T& b) { if (a < b) { a = b; return true; } return false; }
 
 void solve() {
         int n;
         cin >> n;
-        map<int, int> cnt;
-        vector<int> a(n);
+        vector<pair<int, int>> val(n);
+        vector<pair<int, int>> border(n);
         rep(i, n) {
-                cin >> a[i];
-                cnt[a[i]] ++;
+                cin >> val[i].first >> val[i].second;
+                border[i] = make_pair(val[i].first + val[i].second, i);
         }
-        int ans = 0;
-        for (auto it : cnt) {
-                ans = max(ans, it.second);
+        priority_queue<pair<int, int>> que;
+        rep(i, n) {
+                que.push(make_pair(val[i].second, i));
         }
-        cout << ans << '\n';
+        sort(rall(border));
+        rep(i, n) {
+                int v = border[i].first;
+                int idx = border[i].second;
+        }
 }
 
 int main() {
         cin.tie(nullptr);
         ios::sync_with_stdio(false);
-        int t; cin >> t;
-        // int t = 1;
+        // int t; cin >> t;
+        int t = 1;
         while (t --) {
                 solve();
         }
         return 0;
 }
-

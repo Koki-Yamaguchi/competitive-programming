@@ -7,25 +7,46 @@ using namespace std;
 using ll = long long;
 template<typename T, typename U> ostream& operator << (ostream& os, const pair<T, U>& p) { os << p.first << " " << p.second; return os; }
 template<typename T> ostream& operator << (ostream& os, const vector<T>& vec) { for (int i = 0; i < vec.size(); i ++) { os << vec[i] << (i + 1 == vec.size() ? "" : " "); } return os; }
-template<typename T> ostream& operator << (ostream& os, const set<T> &p) { os << "{"; for (auto it = p.begin(); it != p.end(); it ++) { if (it != p.begin()) { os << ", "; } os << *it; } os << "}"; return os; }
-template<typename T, typename U> ostream& operator << (ostream& os, const map<T, U> &p) { for (auto it = p.begin(); it != p.end(); it ++) { if (it != p.begin()) { os << ", "; } os << "{" << (*it).first << ": " << (*it).second << "}"; } return os; }
 template<typename T> bool chmin(T &a, const T& b) { if (a > b) { a = b; return true; } return false; }
 template<typename T> bool chmax(T &a, const T& b) { if (a < b) { a = b; return true; } return false; }
 
 void solve() {
         int n;
         cin >> n;
-        map<int, int> cnt;
-        vector<int> a(n);
-        rep(i, n) {
+        vector<ll> a(n + 2);
+        ll s = 0;
+        rep(i, n + 2) {
                 cin >> a[i];
+                s += a[i];
+        }
+        map<ll, ll> cnt;
+        rep(i, n + 2) {
                 cnt[a[i]] ++;
         }
-        int ans = 0;
-        for (auto it : cnt) {
-                ans = max(ans, it.second);
+        rep(i, n + 2) {
+                ll sss = a[i];
+                cnt[sss] --;
+                ll r = s - 2 * sss;
+                if (cnt[r] > 0) {
+                        int rj = -1;
+                        rep(j, n + 2) {
+                                if (a[j] == r && i != j) {
+                                        rj = j;
+                                        break;
+                                }
+                        }
+                        vector<int> ans;
+                        rep(j, n + 2) {
+                                if (j != i && j != rj) {
+                                        ans.push_back(a[j]);
+                                }
+                        }
+                        cout << ans << '\n';
+                        return;
+                }
+                cnt[sss] ++;
         }
-        cout << ans << '\n';
+        cout << -1 << '\n';
 }
 
 int main() {
@@ -38,4 +59,3 @@ int main() {
         }
         return 0;
 }
-

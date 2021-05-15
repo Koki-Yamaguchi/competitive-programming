@@ -7,24 +7,30 @@ using namespace std;
 using ll = long long;
 template<typename T, typename U> ostream& operator << (ostream& os, const pair<T, U>& p) { os << p.first << " " << p.second; return os; }
 template<typename T> ostream& operator << (ostream& os, const vector<T>& vec) { for (int i = 0; i < vec.size(); i ++) { os << vec[i] << (i + 1 == vec.size() ? "" : " "); } return os; }
-template<typename T> ostream& operator << (ostream& os, const set<T> &p) { os << "{"; for (auto it = p.begin(); it != p.end(); it ++) { if (it != p.begin()) { os << ", "; } os << *it; } os << "}"; return os; }
-template<typename T, typename U> ostream& operator << (ostream& os, const map<T, U> &p) { for (auto it = p.begin(); it != p.end(); it ++) { if (it != p.begin()) { os << ", "; } os << "{" << (*it).first << ": " << (*it).second << "}"; } return os; }
 template<typename T> bool chmin(T &a, const T& b) { if (a > b) { a = b; return true; } return false; }
 template<typename T> bool chmax(T &a, const T& b) { if (a < b) { a = b; return true; } return false; }
 
 void solve() {
-        int n;
-        cin >> n;
-        map<int, int> cnt;
+        int n, x;
+        cin >> n >> x;
         vector<int> a(n);
         rep(i, n) {
                 cin >> a[i];
-                cnt[a[i]] ++;
         }
-        int ans = 0;
-        for (auto it : cnt) {
-                ans = max(ans, it.second);
+        vector<int> ans;
+        ll s = 0;
+        rep(i, n) {
+                if (s + a[i] == x) {
+                        if (i == n - 1) {
+                                cout << "NO\n";
+                                return;
+                        }
+                        swap(a[i], a[i + 1]);
+                }
+                s += a[i];
+                ans.push_back(a[i]);
         }
+        cout << "YES\n";
         cout << ans << '\n';
 }
 
@@ -38,4 +44,3 @@ int main() {
         }
         return 0;
 }
-

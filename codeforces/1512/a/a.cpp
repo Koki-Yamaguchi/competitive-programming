@@ -7,25 +7,32 @@ using namespace std;
 using ll = long long;
 template<typename T, typename U> ostream& operator << (ostream& os, const pair<T, U>& p) { os << p.first << " " << p.second; return os; }
 template<typename T> ostream& operator << (ostream& os, const vector<T>& vec) { for (int i = 0; i < vec.size(); i ++) { os << vec[i] << (i + 1 == vec.size() ? "" : " "); } return os; }
-template<typename T> ostream& operator << (ostream& os, const set<T> &p) { os << "{"; for (auto it = p.begin(); it != p.end(); it ++) { if (it != p.begin()) { os << ", "; } os << *it; } os << "}"; return os; }
-template<typename T, typename U> ostream& operator << (ostream& os, const map<T, U> &p) { for (auto it = p.begin(); it != p.end(); it ++) { if (it != p.begin()) { os << ", "; } os << "{" << (*it).first << ": " << (*it).second << "}"; } return os; }
 template<typename T> bool chmin(T &a, const T& b) { if (a > b) { a = b; return true; } return false; }
 template<typename T> bool chmax(T &a, const T& b) { if (a < b) { a = b; return true; } return false; }
 
 void solve() {
         int n;
         cin >> n;
-        map<int, int> cnt;
         vector<int> a(n);
+        map<int, int> cnt;
         rep(i, n) {
                 cin >> a[i];
                 cnt[a[i]] ++;
         }
-        int ans = 0;
+        int v = -1;
         for (auto it : cnt) {
-                ans = max(ans, it.second);
+                if (it.second == 1) {
+                        v = it.first;
+                        break;
+                }
         }
-        cout << ans << '\n';
+        rep(i, n) {
+                if (a[i] == v) {
+                        cout << i + 1 << '\n';
+                        return;
+                }
+        }
+        assert(false);
 }
 
 int main() {
@@ -38,4 +45,3 @@ int main() {
         }
         return 0;
 }
-

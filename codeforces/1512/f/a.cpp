@@ -7,23 +7,36 @@ using namespace std;
 using ll = long long;
 template<typename T, typename U> ostream& operator << (ostream& os, const pair<T, U>& p) { os << p.first << " " << p.second; return os; }
 template<typename T> ostream& operator << (ostream& os, const vector<T>& vec) { for (int i = 0; i < vec.size(); i ++) { os << vec[i] << (i + 1 == vec.size() ? "" : " "); } return os; }
-template<typename T> ostream& operator << (ostream& os, const set<T> &p) { os << "{"; for (auto it = p.begin(); it != p.end(); it ++) { if (it != p.begin()) { os << ", "; } os << *it; } os << "}"; return os; }
-template<typename T, typename U> ostream& operator << (ostream& os, const map<T, U> &p) { for (auto it = p.begin(); it != p.end(); it ++) { if (it != p.begin()) { os << ", "; } os << "{" << (*it).first << ": " << (*it).second << "}"; } return os; }
 template<typename T> bool chmin(T &a, const T& b) { if (a > b) { a = b; return true; } return false; }
 template<typename T> bool chmax(T &a, const T& b) { if (a < b) { a = b; return true; } return false; }
 
 void solve() {
         int n;
-        cin >> n;
-        map<int, int> cnt;
-        vector<int> a(n);
+        ll c;
+        cin >> n >> c;
+        vector<int> a(n), b(n - 1);
         rep(i, n) {
                 cin >> a[i];
-                cnt[a[i]] ++;
         }
-        int ans = 0;
-        for (auto it : cnt) {
-                ans = max(ans, it.second);
+        rep(i, n - 1) {
+                cin >> b[i];
+        }
+        ll ans = 1e12;
+        ll cur = 0;
+        ll curd = 0;
+        rep(i, n) {
+                ans = min(ans, curd + ((c - cur) + a[i] - 1) / a[i]);
+                if (i < n - 1) {
+                        ll need = b[i] - cur;
+                        if (need > 0) {
+                                ll d = (need + a[i] - 1) / a[i];
+                                curd += d;
+                                cur += a[i] * d;
+                        }
+                        assert(cur >= b[i]);
+                        cur -= b[i];
+                        curd ++;
+                }
         }
         cout << ans << '\n';
 }
@@ -38,4 +51,3 @@ int main() {
         }
         return 0;
 }
-

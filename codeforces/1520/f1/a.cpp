@@ -7,35 +7,47 @@ using namespace std;
 using ll = long long;
 template<typename T, typename U> ostream& operator << (ostream& os, const pair<T, U>& p) { os << p.first << " " << p.second; return os; }
 template<typename T> ostream& operator << (ostream& os, const vector<T>& vec) { for (int i = 0; i < vec.size(); i ++) { os << vec[i] << (i + 1 == vec.size() ? "" : " "); } return os; }
-template<typename T> ostream& operator << (ostream& os, const set<T> &p) { os << "{"; for (auto it = p.begin(); it != p.end(); it ++) { if (it != p.begin()) { os << ", "; } os << *it; } os << "}"; return os; }
-template<typename T, typename U> ostream& operator << (ostream& os, const map<T, U> &p) { for (auto it = p.begin(); it != p.end(); it ++) { if (it != p.begin()) { os << ", "; } os << "{" << (*it).first << ": " << (*it).second << "}"; } return os; }
 template<typename T> bool chmin(T &a, const T& b) { if (a > b) { a = b; return true; } return false; }
 template<typename T> bool chmax(T &a, const T& b) { if (a < b) { a = b; return true; } return false; }
 
+int ask(int l, int r) {
+        cout << "? " << l + 1 << " " << r + 1 << endl;
+        int s;
+        cin >> s;
+        return s;
+}
+
+void answer(int r) {
+        cout << "! " << r + 1 << '\n';
+        return;
+}
+
 void solve() {
-        int n;
-        cin >> n;
-        map<int, int> cnt;
-        vector<int> a(n);
-        rep(i, n) {
-                cin >> a[i];
-                cnt[a[i]] ++;
+        int n, t;
+        cin >> n >> t;
+        int k;
+        cin >> k;
+        int lb = -1, ub = n;
+        while (ub - lb > 1) {
+                int mid = (lb + ub) / 2;
+                int sum = ask(0, mid);
+                int zn = mid + 1 - sum;
+                if (zn <= k - 1) {
+                        lb = mid;
+                } else {
+                        ub = mid;
+                }
         }
-        int ans = 0;
-        for (auto it : cnt) {
-                ans = max(ans, it.second);
-        }
-        cout << ans << '\n';
+        answer(lb + 1);
 }
 
 int main() {
         cin.tie(nullptr);
         ios::sync_with_stdio(false);
-        int t; cin >> t;
-        // int t = 1;
+        // int t; cin >> t;
+        int t = 1;
         while (t --) {
                 solve();
         }
         return 0;
 }
-
