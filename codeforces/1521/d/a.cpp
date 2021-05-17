@@ -87,20 +87,42 @@ void solve() {
         dfs0(dfs0, 0, -1);
         vector<vector<int>> pathg(n);
         vector<set<int>> useset(n);
-        rep(i, n) {
-                for (auto j : use[0][i]) {
-                        pathg[i].push_back(j);
-                        pathg[j].push_back(i);
-                        useset[i].insert(j);
-                        useset[j].insert(i);
+        auto dfs1 = [&](auto self, int u, int prev, bool paruse) -> void {
+                set<int> chuse;
+                if (not paruse) {
+                        for (auto v : use[0][u]) {
+                                chuse.insert(v);
+                        }
+                } else {
+                        if (use[0][u].size() <= 1) {
+                                for (auto v : use[0][u]) {
+                                        chuse.insert(v);
+                                }
+                        } else {
+                                for (auto v : use[1][u]) {
+                                        chuse.insert(v);
+                                }
+                        }
                 }
-        }
+                for (auto v : g[u]) if (v != prev) {
+                        if (chuse.count(v) == 0) {
+                                self(self, v, u, false);
+                        } else {
+                                pathg[u].push_back(v);
+                                pathg[v].push_back(u);
+                                useset[u].insert(v);
+                                useset[v].insert(u);
+                                self(self, v, u, true);
+                        }
+                }
+        };
+        dfs1(dfs1, 0, -1, false);
         vector<bool> used(n);
         vector<int> pth;
-        auto dfs1 = [&](auto self, int u, int prev) -> void {
+        auto dfs2 = [&](auto self, int u, int prev) -> void {
                 used[u] = true;
                 pth.push_back(u);
-                assert(pathg.size() <= 2); // fail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                assert(pathg[u].size() <= 2);
                 for (auto v : pathg[u]) if (v != prev) {
                         self(self, v, u);
                 }
@@ -108,7 +130,7 @@ void solve() {
         vector<vector<int>> paths;
         rep(i, n) {
                 if (not used[i] && pathg[i].size() <= 1) {
-                        dfs1(dfs1, i, -1);
+                        dfs2(dfs2, i, -1);
                         paths.push_back(pth);
                         pth.clear();
                 }
@@ -128,16 +150,7 @@ void solve() {
         rep(i, (int) paths.size() - 1) {
                 ans.push_back({remove[i].first, remove[i].second, paths[i].back(), paths[i + 1].front()});
         }
-        rep(i, paths.size()) {
-                cerr << "path" << endl;
-                for (auto p : paths[i]) {
-                        cerr << p + 1 << " ";
-                }
-                cerr << endl;
-        }
-        // fail here
-        // assert(ans.size() == dp[0][0]);
-        //                14    15
+        assert(dp[0][0] == ans.size());
         cout << dp[0][0] << '\n';
         rep(i, ans.size()) {
                 cout <<
@@ -153,7 +166,6 @@ int main() {
         ios::sync_with_stdio(false);
         int t; cin >> t;
         // int t = 1;
-        t = 2;
         while (t --) {
                 solve();
         }
