@@ -12,20 +12,27 @@ template<typename T, typename U> ostream& operator << (ostream& os, const map<T,
 template<typename T> bool chmin(T &a, const T& b) { if (a > b) { a = b; return true; } return false; }
 template<typename T> bool chmax(T &a, const T& b) { if (a < b) { a = b; return true; } return false; }
 
-void solve(const int man, const vector<ll> &dp) {
-        int n;
-        ll k;
+void solve() {
+        int n, k;
         cin >> n >> k;
-        if (n <= man && dp[n] < k) {
-                cout << -1 << '\n';
+        int ma = (n - 1) / 2;
+        if (ma < k) {
+                cout << "-1\n";
                 return;
         }
-        dump(dp);
-        vector<int> ans(n);
-        rep(i, n) {
-                // TODO greedily count the number
+        int cur = n;
+        int c = 0;
+        vector<int> ans(n, -1);
+        for (int i = 1; i < n && c < k; i += 2) {
+                ans[i] = cur --;
+                c ++;
         }
-        cout << '\n';
+        for (int i = 0; i < n; i ++) {
+                if (ans[i] == -1) {
+                        ans[i] = cur --;
+                }
+        }
+        cout << ans << '\n';
 }
 
 int main() {
@@ -33,28 +40,8 @@ int main() {
         ios::sync_with_stdio(false);
         int t; cin >> t;
         // int t = 1;
-
-        const int man = 100;
-        const ll inf = 1e18 + 10;
-        vector<ll> dpf(man + 1), dpb(man + 1);
-        dpf[0] = 1, dpf[1] = 1;
-        dpb[0] = 1, dpb[1] = 0;
-        for (int i = 2; i < man + 1; i ++) {
-                dpf[i] = dpf[i - 1] + dpb[i - 1];
-                dpb[i] = dpb[i - 1] + dpf[i - 2];
-                if (dpf[i] > inf) {
-                        dpf[i] = inf;
-                }
-                if (dpb[i] > inf) {
-                        dpb[i] = inf;
-                }
-        }
-        vector<ll> dp(man + 1);
-        rep(i, man + 1) {
-                dp[i] = dpf[i] + dpb[i];
-        }
         while (t --) {
-                solve(man, dp);
+                solve();
         }
         return 0;
 }

@@ -12,49 +12,45 @@ template<typename T, typename U> ostream& operator << (ostream& os, const map<T,
 template<typename T> bool chmin(T &a, const T& b) { if (a > b) { a = b; return true; } return false; }
 template<typename T> bool chmax(T &a, const T& b) { if (a < b) { a = b; return true; } return false; }
 
-void solve(const int man, const vector<ll> &dp) {
-        int n;
-        ll k;
-        cin >> n >> k;
-        if (n <= man && dp[n] < k) {
-                cout << -1 << '\n';
-                return;
+const ll MOD = 1e9 + 7;
+ll dp[10][200005];
+
+ll calc(int val, int m) {
+        if (dp[val][m] != -1) {
+                return dp[val][m];
         }
-        dump(dp);
-        vector<int> ans(n);
-        rep(i, n) {
-                // TODO greedily count the number
+        if (m == 0) {
+                dp[val][m] = 1;
+                return dp[val][m];
         }
-        cout << '\n';
+        if (val == 9) {
+                (dp[val][m] = calc(1, m - 1) + calc(0, m - 1)) %= MOD;
+        } else {
+                dp[val][m] = calc(val + 1, m - 1);
+        }
+        return dp[val][m];
+}
+
+void solve() {
+        string n;
+        int m;
+        cin >> n >> m;
+        ll ans = 0;
+        rep(i, n.size()) {
+                int s = n[i] - '0';
+                (ans += calc(s, m)) %= MOD;
+        }
+        cout << ans << '\n';
 }
 
 int main() {
         cin.tie(nullptr);
         ios::sync_with_stdio(false);
         int t; cin >> t;
-        // int t = 1;
 
-        const int man = 100;
-        const ll inf = 1e18 + 10;
-        vector<ll> dpf(man + 1), dpb(man + 1);
-        dpf[0] = 1, dpf[1] = 1;
-        dpb[0] = 1, dpb[1] = 0;
-        for (int i = 2; i < man + 1; i ++) {
-                dpf[i] = dpf[i - 1] + dpb[i - 1];
-                dpb[i] = dpb[i - 1] + dpf[i - 2];
-                if (dpf[i] > inf) {
-                        dpf[i] = inf;
-                }
-                if (dpb[i] > inf) {
-                        dpb[i] = inf;
-                }
-        }
-        vector<ll> dp(man + 1);
-        rep(i, man + 1) {
-                dp[i] = dpf[i] + dpb[i];
-        }
+        rep(i, 10) rep(j, 200005) dp[i][j] = -1;
         while (t --) {
-                solve(man, dp);
+                solve();
         }
         return 0;
 }
